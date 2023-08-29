@@ -1,0 +1,38 @@
+_export:
+  sh:
+    shell: ["powershell.exe", "-ExecutionPolicy", "RemoteSigned"]
+
++create_folder:
+  sh>: ./01_create_folder.ps1
+
++wait_update_receipt_folder:
+  depends_on: +create_folder
+  sh>: ./02_1_check_receipt_folder.ps1
+
++wait_update_customer_folder:
+  depends_on: +create_folder
+  sh>: ./02_2_check__customer_folder.ps1
+
++send_cloud:
+  depends_on: {+wait_update_receipt_folder: succeeded, +wait_update_customer_folder: succeeded}
+  sh>: ./03_check_newfile_send_gcp.ps1
+
++insert_receipt_table:
+  depends_on: +send_cloud
+  sh>: ./04_2_1_bq_load_receipt.ps1
+
++create_temp_table:
+  depends_on: +send_cloud
+  sh>: ./04_1_1_create_temp_table.ps1
+
++insert_table_temp_customer:
+  depends_on: +create_temp_table
+  sh>: ./04_1_2_insert_table_tempCustomer.ps1
+
++merge_into_customer:
+  depends_on: +insert_table_temp_customer
+  sh>: ./04_1_3_merge_quert.ps1
+
++delete_temp_table:
+  depends_on: {+merge_into_customer: succeeded, +insert_receipt_table: succeeded}
+  sh>: ./04_3_delete_temp_table.ps1

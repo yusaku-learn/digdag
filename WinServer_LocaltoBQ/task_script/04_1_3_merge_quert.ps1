@@ -1,0 +1,1 @@
+bq query --use_legacy_sql=false "$(cat C:\Users\uchii\Desktop\digdag\.digdag\merge_query.sql)"

@@ -1,0 +1,2 @@
+sales_ymd,sales_epoch,store_cd,receipt_no,receipt_sub_no,customer_id,product_cd,quantity,amount
+2023-08-30,1541203200,S14006,112,1,CS006214000001,P070305012,1,999999
